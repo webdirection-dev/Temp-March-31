@@ -1,11 +1,11 @@
-import {useSelector} from 'react-redux'
-import {selectControlInfo} from '../control/control-slice'
-import {selectOpeningInfo} from '../opening/opening-slice'
-import {addZero, printTg} from '../../static/helpers/var'
+import { useSelector } from 'react-redux'
+import { selectControlInfo } from '../control/control-slice'
+import { selectOpeningInfo } from '../opening/opening-slice'
+import { addZero, printTg } from '../../static/helpers/var'
 
-export const useCopyStaff = (staffPerson) => {
-    const {qualities, stand, tg, priority, effect} = useSelector(store => selectControlInfo(store).controls)
-    const {isInside, openingTitle, jiraId, startTime, systemAdmins, openingDescription} = useSelector(store => selectOpeningInfo(store).data)
+export const useCopyStaff = (staffPerson, title) => {
+    const { qualities, stand, tg, priority, effect } = useSelector(store => selectControlInfo(store).controls)
+    const { isInside, openingTitle, jiraId, startTime, systemAdmins, openingDescription } = useSelector(store => selectOpeningInfo(store).data)
 
     const inside = isInside ? `**ВНУТРЕННИЙ**\n` : ''
     const standOut = stand ? `${stand} ` : ''
@@ -16,6 +16,29 @@ export const useCopyStaff = (staffPerson) => {
     const minutesStart = new Date(Date.parse(startTime)).getMinutes()
 
     const str = (
+        `**FYI**` +
+        `\n` +
+        `\n${person}` +
+        `\n` +
+        `\n${title}` +
+        `\n` +
+        `\n${inside}` +
+        `**Инцидент ОТКРЫТ**` +
+        `\n**${standOut}${qualitiesOut}**` +
+        `\n` +
+        `\n**${openingTitle}**` +
+        `\n**ТГ:** ${printTgTxt}` +
+        `\n` +
+        `\n**Приоритет:** ${priority}` +
+        `\n**Степень влияния:** ${effect}` +
+        `\nhttps://jira.crpt.ru/browse/OPS-${jiraId}` +
+        `\n**Время инцидента:** ${addZero(hourStart)}:${addZero(minutesStart)}` +
+        `\n**Кто оповещён:** ${systemAdmins}` +
+        `\n` +
+        `\n**Примечание:** ${openingDescription}`
+    )
+
+    const str2 = (
         `**FYI**` +
         `\n` +
         `\n${person}` +
@@ -37,9 +60,9 @@ export const useCopyStaff = (staffPerson) => {
     )
 
     const copySummary = () => {
-        navigator.clipboard.writeText(str)
+        navigator.clipboard.writeText(title.length > 0 ? str : str2)
         document.execCommand("copy")
     }
 
-    return {copySummary}
+    return { copySummary }
 }

@@ -8,7 +8,7 @@ import TextareaAutosize from 'react-textarea-autosize'
 const StaffSummary = ({ setAlert, start, staff }) => {
     const dispatch = useDispatch()
     const { staffPerson, title } = useSelector(store => selectStaffInfo(store).data)
-    const { copySummary } = useCopyStaff(staffPerson)
+    const { copySummary } = useCopyStaff(staffPerson, title)
 
     const handelChange = (e) => {
         dispatch(setTitle(e.target.value))
@@ -35,7 +35,7 @@ const StaffSummary = ({ setAlert, start, staff }) => {
                     <TextareaAutosize
                         className='summary__area'
                         value={title}
-                        name="miTitle"
+                        name="fyiTitle"
                         placeholder='Title'
                         onChange={handelChange}
                     />
